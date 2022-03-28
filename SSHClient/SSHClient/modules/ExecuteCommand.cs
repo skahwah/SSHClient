@@ -5,19 +5,18 @@ namespace SSHClient.Modules
 {
     public class ExecuteCommand
     {
-        public void Command(SshClient client, string command)
+        public string Command(SshClient client, string command)
         {
             try
             {
                 var cmd = client.CreateCommand(command);
-                var result = cmd.Execute();
-                Console.Write(result);
+                string result = cmd.Execute();
                 client.Disconnect();
+                return result;
             }
             catch
             {
-                Console.WriteLine("[!] Failed! can not execute " + command);
-                Environment.Exit(0);
+                return "[!] Failed! can not execute " + command;
             }
         } 
     }

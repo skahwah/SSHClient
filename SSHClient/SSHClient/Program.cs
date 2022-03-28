@@ -25,7 +25,7 @@ namespace SSHClient
                 ArgumentLogic ArgumentLogic = new ArgumentLogic();
                 ArgumentLogic.AuthenticationType(argDict);
             }
-            catch (NullReferenceException ex)
+            catch (NullReferenceException)
             {
 
             }
@@ -48,7 +48,7 @@ namespace SSHClient
 
                 return ret;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 Console.WriteLine("");
                 Console.WriteLine("\n[!] You specified duplicate switches. Check your command again.\n");

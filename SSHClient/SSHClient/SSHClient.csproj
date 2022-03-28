@@ -77,7 +77,7 @@
     <Compile Include="authentication\KeyAuthentication.cs" />
     <Compile Include="authentication\PasswordAuthentication.cs" />
     <Compile Include="authentication\TestAuthentication.cs" />
-    <Compile Include="modules\DownloadFile.cs" />
+    <Compile Include="modules\Transfer.cs" />
     <Compile Include="modules\ExecuteCommand.cs" />
     <Compile Include="modules\Help.cs" />
     <Compile Include="Program.cs" />

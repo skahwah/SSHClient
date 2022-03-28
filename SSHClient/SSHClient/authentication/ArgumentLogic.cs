@@ -17,7 +17,10 @@ namespace SSHClient.Auth
         private static String user = "";
         private static String pass = "";
         private static String module = "";
-        private static String option = "";
+        private static String command = "";
+        private static String source = "";
+        private static String destination = "";
+
 
         public void AuthenticationType(Dictionary<string, string> argDict)
         {
@@ -80,18 +83,50 @@ namespace SSHClient.Auth
         // EvaluateTheArguments
         public static void EvaluateTheArguments(Dictionary<string, string> argDict)
         {
-            // standard single sql server logic
             // if the module type is command, then set the module to command and set option to the actual command
-            if (argDict["m"].ToLower().Equals("command") && !argDict.ContainsKey("o"))
+            if (argDict["m"].ToLower().Equals("command"))
             {
-                Console.WriteLine("\n[!] ERROR: Must supply a command (-o)");
-                module = argDict["m"].ToLower();
-                return;
+                if (!argDict.ContainsKey("c"))
+                {
+                    Console.WriteLine("\n[!] ERROR: Must supply a command (-c)");
+                    return;
+                }
+                else 
+                {
+                    module = argDict["m"].ToLower();
+                    command = argDict["c"];
+                } 
             }
-            else if (argDict.ContainsKey("o"))
+            // if the module type is download, then set the module to download and set the source and destination variables
+            else if (argDict["m"].ToLower().Equals("download"))
             {
-                module = argDict["m"].ToLower();
-                option = argDict["o"];
+                if (!argDict.ContainsKey("f") && !argDict.ContainsKey("d"))
+                {
+                    Console.WriteLine("\n[!] ERROR: Must supply a the remote file you want to download (-f) and local download directory (-d)");
+                    return;
+                }
+
+                else
+                {
+                    module = argDict["m"].ToLower();
+                    source = argDict["f"];
+                    destination = argDict["d"];
+                }
+            }
+            // if the module type is upload, then set the module to upload and set the source and destination variables
+            else if (argDict["m"].ToLower().Equals("upload"))
+            {
+                if (!argDict.ContainsKey("f") && !argDict.ContainsKey("d"))
+                {
+                    Console.WriteLine("\n[!] ERROR: Must supply a the local file you want to upload (-f) and remote destination directory (-d)");
+                    return;
+                }
+                else
+                {
+                    module = argDict["m"].ToLower();
+                    source = argDict["f"];
+                    destination = argDict["d"];
+                }
             }
             else
             {
@@ -104,20 +139,19 @@ namespace SSHClient.Auth
             {
                 if (con.ToString() == "Renci.SshNet.SshClient" && con.IsConnected)
                 {
-                    Console.WriteLine("[+] Success! " + user + " can log in to " + host + ":" + port);
+                    Console.WriteLine("[+] Success! " + user + " can log in to " + host + ":" + port + "\n");
                     con.Disconnect();
                     }
             }
             else if (module.Equals("command"))
             {
-                Console.Out.WriteLine("\n[+] Executing: " + option);
+                Console.Out.WriteLine("[+] Executing: '" + command + "'\n");
                 ExecuteCommand ExecuteCommand = new ExecuteCommand();
-                ExecuteCommand.Command(con, option);
+                Console.WriteLine(ExecuteCommand.Command(con, command));
             }
             else if (module.Equals("download"))
             {
-                Console.Out.WriteLine("\n[+] Downloading: " + option);
-                DownloadFile DownloadFile = new DownloadFile();
+                Transfer Transfer = new Transfer();
 
                 if (authType == "password")
                 {
@@ -130,13 +164,30 @@ namespace SSHClient.Auth
                     scon = KeyAuthentication.Sftp(host, Convert.ToInt32(port), user, pass);
                 }
 
-                DownloadFile.Download(scon, option);
+                Transfer.Download(con, scon, source, destination);
+            }
+            else if (module.Equals("upload"))
+            {
+                Transfer Transfer = new Transfer();
+
+                if (authType == "password")
+                {
+                    PasswordAuthentication PasswordAuthentication = new PasswordAuthentication();
+                    scon = PasswordAuthentication.Sftp(host, Convert.ToInt32(port), user, pass);
+                }
+                else
+                {
+                    KeyAuthentication KeyAuthentication = new KeyAuthentication();
+                    scon = KeyAuthentication.Sftp(host, Convert.ToInt32(port), user, pass);
+                }
+
+                Transfer.Upload(con, scon, source, destination);
             }
             else
             {
                 Console.WriteLine("[!] ERROR: Module " + module + " does not exist\n");
             }
 
-        } // end EvaluateTheArguments
+        } 
     }
 }

@@ -27,8 +27,9 @@ If the authentication type is <b>Key</b>, then you will need to supply the follo
 Standard modules are used to interact against a single MS SQL server.
 
 * <b>connect</b> - Test to see if the credentials work
-* <b>command -o COMMAND</b> - Execute an arbitrary command
-* <b>download -o PATH</b> - Download a file to `C:\\Users\\Username\\Documents\\`
+* <b>command -c COMMAND</b> - Execute an arbitrary command
+* <b>download -f REMOTEFILE -d LOCALPATH</b> - Download a file to a local path
+* <b>upload -f LOCALFILE -d REMOTEPATH</b> Upload a file to a remote path
 
 ## Examples
 ### Test connection
@@ -39,7 +40,7 @@ SSHClient.exe -a Key -s 18.191.138.12 -p 22 -u ubuntu -k c:\users\skawa\aws.key 
 
 ### Execute commands
 ```
-SSHClient.exe -a Key -s 18.191.138.12 -p 22 -u ubuntu -k c:\users\skawa\aws.key -m command -o "ps -eaf"
+SSHClient.exe -a Key -s 18.191.138.12 -p 22 -u ubuntu -k c:\users\skawa\aws.key -m command -c "ps -eaf"
 
 [+] Executing: ps -eaf
 UID          PID    PPID  C STIME TTY          TIME CMD
@@ -56,15 +57,18 @@ root          10       2  0 Nov10 ?        00:00:00 [rcu_tasks_rude_]
 
 ### Download a file
 ```
-SSHClient.exe -a Key -s 18.191.138.12 -p 22 -u ubuntu -k c:\users\skawa\aws.key -m download -o /home/ubuntu/file.txt
+SSHClient.exe -a Key -s 18.191.138.12 -p 22 -u ubuntu -k c:\users\skawa\aws.key -m download -f /etc/passwd -d C:\users\skawa\downloads\
 
-[+] Downloading: /home/ubuntu/file.txt
-[+] File downloaded to: C:\Users\skawa\Documents\file.txt
+[+] Downloading '/etc/passwd' to 'C:\users\skawa\downloads\'
+
+[+] File downloaded to 'C:\users\skawa\downloads\passwd'
 ```
 
-## Roadmap
-The below techniques are on the roadmap for future releases
-* Upload files
-* Perhaps add an option to customize the the downloads directory, this is currently `C:\\Users\\Username\\Documents\\`
-* Authentication based on users session
+### Upload a file
+```
+SSHClient.exe -a Key -s 18.191.138.12 -p 22 -u ubuntu -k c:\users\skawa\aws.key -m upload -f C:\Users\skawa\Desktop\test.py -d /home/ubuntu 
 
+[+] Uploading 'C:\Users\skawa\Desktop\test.py' to '/home/ubuntu'
+
+[+] File uploaded to '/home/ubuntu/test.py'
+```
