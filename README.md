@@ -5,7 +5,7 @@ A small SSH client written in C#.
 You can grab a copy of SSHClient from the [releases](https://github.com/skahwah/SSHClient/releases) page. Alternatively, feel free to compile the solution yourself. Fody/Costura has been used to embed the [SSH.NET](https://github.com/sshnet/SSH.NET) reference.
 
 ## Mandatory Arguments
-The mandatory arguments consist of an authentication type (either key or pasword), connection parameters and a module.
+The mandatory arguments consist of an authentication type (either key or password), connection parameters and a module.
 
 * <b>-a</b> - Authentication Type
   * <b>-a Password</b> - Use password authentication.
