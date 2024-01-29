@@ -24,7 +24,7 @@ If the authentication type is <b>Key</b>, then you will need to supply the follo
   * <b>-p PORT</b> - Port on the SSH server to connect to
 
 ## Standard Modules
-Standard modules are used to interact against a single MS SQL server.
+Use the following modules to interact with a server via SSH.
 
 * <b>connect</b> - Test to see if the credentials work
 * <b>command -c COMMAND</b> - Execute an arbitrary command
